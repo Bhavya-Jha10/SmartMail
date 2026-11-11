@@ -1,0 +1,266 @@
+{
+  "info": {
+    "_postman_id": "c1f79a8e-5b12-4f32-9c98-112233445566",
+    "name": "SmartMail AI REST API",
+    "description": "Comprehensive Postman Collection for testing all SmartMail AI endpoints: Authentication, User Profiles, AI Email Generation, Summarization, History, and Dashboard Metrics.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8080/api",
+      "type": "string"
+    },
+    {
+      "key": "token",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "1. Authentication",
+      "item": [
+        {
+          "name": "Register User",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"College Student\",\n  \"email\": \"student@smartmail.ai\",\n  \"password\": \"Password123!\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/register",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "register"]
+            }
+          }
+        },
+        {
+          "name": "Login User",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "if (jsonData.token) {",
+                  "    pm.collectionVariables.set(\"token\", jsonData.token);",
+                  "    console.log(\"Saved JWT Token:\", jsonData.token);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"student@smartmail.ai\",\n  \"password\": \"Password123!\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "login"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "2. User Profile",
+      "item": [
+        {
+          "name": "Get User Profile",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/user/profile",
+              "host": ["{{baseUrl}}"],
+              "path": ["user", "profile"]
+            }
+          }
+        },
+        {
+          "name": "Update User Profile",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Lead Developer\",\n  \"currentPassword\": \"Password123!\",\n  \"newPassword\": \"NewPassword2026!\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/user/profile",
+              "host": ["{{baseUrl}}"],
+              "path": ["user", "profile"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "3. AI Email Generation & Summarization",
+      "item": [
+        {
+          "name": "Generate Email Reply",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"originalContent\": \"Hi, could you please confirm our project demonstration slot for Thursday at 11 AM?\",\n  \"senderName\": \"Prof. Davis\",\n  \"recipientName\": \"Student\",\n  \"tone\": \"Formal\",\n  \"length\": \"Medium\",\n  \"additionalInstructions\": \"Confirm attendance, state presentation slides are finalized.\",\n  \"alternativeCount\": 2,\n  \"saveToHistory\": true\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/email/generate",
+              "host": ["{{baseUrl}}"],
+              "path": ["email", "generate"]
+            }
+          }
+        },
+        {
+          "name": "Summarize Email Thread",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"emailContent\": \"Team, please submit your viva project reports to the examination portal by November 15th at 5 PM. Make sure your GitHub repository links and demo recordings are included. Does anyone have issues accessing the submission portal?\",\n  \"additionalInstructions\": \"Highlight exact deadlines\",\n  \"saveToHistory\": true\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/email/summarize",
+              "host": ["{{baseUrl}}"],
+              "path": ["email", "summarize"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "4. Email History & Stats",
+      "item": [
+        {
+          "name": "Get History (Paginated & Filtered)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/email/history?page=0&size=10&search=&type=ALL&tone=ALL",
+              "host": ["{{baseUrl}}"],
+              "path": ["email", "history"],
+              "query": [
+                { "key": "page", "value": "0" },
+                { "key": "size", "value": "10" },
+                { "key": "search", "value": "" },
+                { "key": "type", "value": "ALL" },
+                { "key": "tone", "value": "ALL" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Single History Record",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/email/history/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["email", "history", "1"]
+            }
+          }
+        },
+        {
+          "name": "Delete History Record",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/email/history/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["email", "history", "1"]
+            }
+          }
+        },
+        {
+          "name": "Get Dashboard Metrics & Tone Stats",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/email/stats",
+              "host": ["{{baseUrl}}"],
+              "path": ["email", "stats"]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

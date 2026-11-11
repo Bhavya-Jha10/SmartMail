@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SmartMail AI Extension</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="popup-container">
+    <!-- Header -->
+    <header class="popup-header">
+      <div class="brand">
+        <div class="brand-icon">✨</div>
+        <div class="brand-text">
+          <h1>SmartMail <span>AI</span></h1>
+          <p>Gmail Assistant</p>
+        </div>
+      </div>
+      <div id="status-pill" class="status-pill offline">API Checking...</div>
+    </header>
+
+    <!-- Content Sections -->
+    <main class="popup-main">
+      <!-- Section A: Unauthenticated State -->
+      <div id="auth-section" class="section">
+        <h2 class="section-title">Sign In to SmartMail AI</h2>
+        <p class="section-subtitle">Connect to your local Spring Boot backend</p>
+
+        <form id="login-form">
+          <div class="form-group">
+            <label for="login-email">Email Address</label>
+            <input type="email" id="login-email" placeholder="e.g. demo@smartmail.ai" required>
+          </div>
+
+          <div class="form-group">
+            <label for="login-password">Password</label>
+            <input type="password" id="login-password" placeholder="••••••••" required>
+          </div>
+
+          <div id="login-error" class="error-banner" style="display: none;"></div>
+
+          <button type="submit" id="login-btn" class="btn btn-primary btn-block">
+            Sign In with Account
+          </button>
+        </form>
+
+        <div class="auth-footer">
+          <a href="http://localhost:5173/register" target="_blank" class="link">
+            Need an account? Register on Web Dashboard ↗
+          </a>
+        </div>
+      </div>
+
+      <!-- Section B: Authenticated State -->
+      <div id="user-section" class="section" style="display: none;">
+        <div class="user-card">
+          <div class="user-avatar" id="user-avatar">U</div>
+          <div class="user-info">
+            <h3 id="user-name">User</h3>
+            <p id="user-email">user@smartmail.ai</p>
+          </div>
+          <button id="logout-btn" class="btn btn-ghost btn-sm">Log Out</button>
+        </div>
+
+        <!-- Quick Tabs -->
+        <div class="tabs">
+          <button class="tab-btn active" data-tab="reply">Quick Reply</button>
+          <button class="tab-btn" data-tab="summarize">Summarize</button>
+          <button class="tab-btn" data-tab="settings">Settings</button>
+        </div>
+
+        <!-- Tab 1: Quick Reply -->
+        <div id="tab-reply" class="tab-content active">
+          <div class="form-group">
+            <textarea id="quick-reply-input" rows="3" placeholder="Paste snippet or open email in Gmail to auto-fill..."></textarea>
+          </div>
+          <div class="form-row">
+            <select id="quick-reply-tone" class="select-sm">
+              <option value="Professional">Professional</option>
+              <option value="Formal">Formal</option>
+              <option value="Friendly">Friendly</option>
+              <option value="Casual">Casual</option>
+              <option value="Apologetic">Apologetic</option>
+              <option value="Persuasive">Persuasive</option>
+            </select>
+            <button id="quick-reply-btn" class="btn btn-primary btn-sm">Generate</button>
+          </div>
+          <div id="quick-reply-output" class="output-box" style="display: none;">
+            <textarea id="quick-reply-text" rows="4" readonly></textarea>
+            <button id="quick-copy-reply-btn" class="btn btn-secondary btn-sm">Copy Reply</button>
+          </div>
+        </div>
+
+        <!-- Tab 2: Quick Summarize -->
+        <div id="tab-summarize" class="tab-content">
+          <div class="form-group">
+            <textarea id="quick-sum-input" rows="3" placeholder="Paste email content to summarize..."></textarea>
+          </div>
+          <button id="quick-sum-btn" class="btn btn-primary btn-sm btn-block">Summarize Insights</button>
+          <div id="quick-sum-output" class="output-box" style="display: none;">
+            <div id="quick-sum-text" class="summary-details"></div>
+            <button id="quick-copy-sum-btn" class="btn btn-secondary btn-sm">Copy Summary</button>
+          </div>
+        </div>
+
+        <!-- Tab 3: Settings -->
+        <div id="tab-settings" class="tab-content">
+          <div class="form-group">
+            <label for="setting-backend-url">Backend Server URL</label>
+            <input type="text" id="setting-backend-url" value="http://localhost:8080">
+          </div>
+          <button id="save-settings-btn" class="btn btn-secondary btn-sm btn-block">Save Configuration</button>
+          <div class="links-group">
+            <a href="http://localhost:5173" target="_blank" class="link">Open React Dashboard ↗</a>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>
